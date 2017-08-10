@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tic Tac Toe</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="jquery-3.2.1.min.js"></script>
+		<script src="tictactoe.js"></script>
+		<script src="app.js"></script>
+	</head>
+
+	<body>
+		<h1>Tic Tac Toe</h1>
+		<h2>
+			<div>
+				Play a new game
+			</div>
+			<div id="player">
+				Player 1: <input type="text" id="player_1" name="player_1">
+				Player 2: <input type="text" id="player_2" name="player_2">
+				<input type="submit" id="submit" value="Submit">
+			</div>
+			<div>
+				<button class="button" type="button">New Game</button>
+			</div>
+		</h2>
+		<div id="board">
+			<table>
+				<tr id="row_1">
+					<td id="1" class="cell"></td>
+					<td id="2" class="cell lr"></td>
+					<td id="3" class="cell"></td>
+				</tr>
+				<tr id="row_2">
+					<td id="4" class="cell tb"></td>
+					<td id="5" class="cell lr tb"></td>
+					<td id="6" class="cell tb"></td>
+				</tr>
+				<tr id="row_3">
+					<td id="7" class="cell"></td>
+					<td id="8" class="cell lr"></td>
+					<td id="9" class="cell"></td>
+				<tr>
+			</table>
+		</div>
+	</body>
+</html>
