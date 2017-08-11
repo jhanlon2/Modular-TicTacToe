@@ -18,7 +18,7 @@ var tictactoe = (function(){
 				}
 			return values
 			}
-		//this.values = this.getValues(this.length)
+		this.values = this.getValues(this.length)
 
 		this.setPlayers = function(player_1,player_2){
 			this.player_1 = player_1
