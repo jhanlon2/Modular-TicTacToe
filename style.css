@@ -1,7 +1,7 @@
 .cell {
-	height: 200px;
-	width: 200px;
-	font-size: 1000%;
+	height: 150px;
+	width: 150px;
+	font-size: 700%;
 	text-align: center
 	}
 
@@ -41,6 +41,6 @@ h2 {
 
 table {
 	position: absolute;
-	left: 28.5%;
+	left: 33.84%;
 	top: 50%
 	}

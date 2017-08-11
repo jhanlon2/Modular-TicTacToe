@@ -56,7 +56,7 @@ var tictactoe = (function(){
 
 		this.getFromApi = function(){
 			//Form the url for the game
-			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/"+this.id+".json"
+			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json"
 			//Get the data from the api
 			var _this = this
 			$.get(url,function(res){
@@ -74,30 +74,36 @@ var tictactoe = (function(){
 				})
 			}
 		this.getFromApi()
-
-		this.saveToApi = function(callback_function){
+/*
+		this.saveToApi = function(){
 			//Takes this.values
 			//Transforms the data into a 1d array
 			var one_d_board = this.convert1dBoard(this.values)
 			//Takes this.player_1 and this.player_2 and adds them into the obj
-			var board_obj = 
-				{ tic_tic_toe_game:
-					{
-					id: this.id,
-					player_1: this.player_1,
-					player_2: this.player_2,
-					data: {
-						board: one_d_board
-						}
-					}
-				}
+			var board_obj = {tic_tic_toe_game:{ data: {board: one_d_board}}}
+				//	id: this.id,
+				//	player_1: this.player_1,
+				//	player_2: this.player_2,
+				//	data: {
+				//		board: one_d_board
+				//		}
+				//	}
+			//	}
 			console.log(board_obj)
 			//Post the obj to the server
-			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/"+this.id+".json"
-			$.post("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",board_obj,callback_function)
+			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json"
+			$.post(url,board_obj,function(res){
+				})
+			}
+		
+		*/
+		this.saveToApi = function(){
+			var obj = {tic_tac_toe_game:{data: {board: this.convert1dBoard(this.values)}}}
+			$.post("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",obj,function(res){
+				})
 			}
 		}
-	
+
 	module.Game = function(){
 		this.board = new module.Board(3)
 		this.turn_count = 0
@@ -121,9 +127,7 @@ var tictactoe = (function(){
 			//Reset the turn count
 			//Clear the board
 			this.turn_count = 0
-			this.getBoard()//TODO: Why?
-			this.convert2dBoard()
-			this.saveBoard()
+			this.saveToApi()
 			}
 
 		this.place = function(x_coord,y_coord){
