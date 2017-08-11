@@ -2,8 +2,12 @@ var tictactoe = (function(){
 
 	module = {}
 
-	module.Board = function(length){
+	module.Board = function(length,id){
+		this.id = id
 		this.length = length
+		this.player_1 = null
+		this.player_2 = null
+
 		this.getValues = function(length){
 			var values = []
 			for(x = 0;x < length; x++){
@@ -14,8 +18,12 @@ var tictactoe = (function(){
 				}
 			return values
 			}
-			
-		this.values = this.getValues(this.length)
+		//this.values = this.getValues(this.length)
+
+		this.setPlayers = function(player_1,player_2){
+			this.player_1 = player_1
+			this.player_2 = player_2
+			}
 
 		this.getBoard = function(){
 			return this.values
@@ -23,6 +31,70 @@ var tictactoe = (function(){
 			
 		this.place = function(x_coord,y_coord,character){
 			this.values[x_coord][y_coord] = character
+			this.saveToApi()
+			}
+
+			
+		this.convert1dBoard = function(two_d_board){
+			//Converts a 2d board into a 1d board
+			one_d_board = [].concat.apply([], two_d_board)
+			return one_d_board
+			}
+
+		this.convert2dBoard = function(one_d_board){
+			//Converts a 1d board into a 2d board
+			 part = this.length
+			 var two_d_board = []
+			 for(var i = 0; i < one_d_board.length; i += part){
+			 	two_d_board.push(one_d_board.slice(i, i + part))
+				}
+			return two_d_board
+			 }
+
+
+		//API interface functions
+
+		this.getFromApi = function(){
+			//Form the url for the game
+			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/"+this.id+".json"
+			//Get the data from the api
+			var _this = this
+			$.get(url,function(res){
+					//Distill the data from the API into "this"
+					_this.player_1 = res.player_1
+					_this.player_2 = res.player_2
+					if (res.data.board.length !== 9){
+						_this.values = _this.getValues(_this.length)
+						_this.saveToApi()
+						}
+					else{
+						var two_d_board = _this.convert2dBoard(res.data.board)
+						_this.values = two_d_board
+						}
+				})
+			}
+		this.getFromApi()
+
+		this.saveToApi = function(callback_function){
+			//Takes this.values
+			//Transforms the data into a 1d array
+			var one_d_board = this.convert1dBoard(this.values)
+			//Takes this.player_1 and this.player_2 and adds them into the obj
+			var board_obj = 
+				{ tic_tic_toe_game:
+					{
+					id: this.id,
+					player_1: this.player_1,
+					player_2: this.player_2,
+					data: {
+						board: one_d_board
+						}
+					}
+				}
+			console.log(board_obj)
+			//Post the obj to the server
+			var url = "http://ce-sample-api.herokuapp.com/tic_tac_toe_games/"+this.id+".json"
+			$.post("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",board_obj,callback_function)
 			}
 		}
 	
@@ -46,43 +118,12 @@ var tictactoe = (function(){
 			}
 
 		this.reset = function(){
+			//Reset the turn count
+			//Clear the board
 			this.turn_count = 0
-			this.getBoard()
+			this.getBoard()//TODO: Why?
 			this.convert2dBoard()
 			this.saveBoard()
-			}
-			
-		this.one_d_board = ""
-		this.api_array = []
-
-		this.convert2dBoard = function(){
-			var two_d_board = this.getBoard()
-			this.one_d_board = [].concat.apply([], two_d_board)
-			return this.one_d_board
-			console.log(this.one_d_board)
-			}
-
-		this.splitBoardArray = function(part){
-			 part = 3
-			 for(var i = 0; i < this.api_array.length; i += part){
-			 	this.api_array.push(this.one_d_board.slice(i, i + part))
-				}
-			return this.api_array
-			 }
-
-		this.saveBoard = function(){
-			var obj = {tic_tac_toe_game:{data:{board: this.one_d_board}}}
-			$.post("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",obj, function(res){
-				})
-			}
-
-		this.loadBoard = function(){
-			var _this = this
-			$.get("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",function(res){
-				console.log(res)
-				_this.one_d_board = res.data.board
-				_this.splitBoardArray()
-				})
 			}
 
 		this.place = function(x_coord,y_coord){

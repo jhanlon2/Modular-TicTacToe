@@ -1,5 +1,7 @@
 var game_1 = new tictactoe.Game()
 $(document).ready(function(){
+	
+	game_1.loadBoard()
 
 	var renderBoard = function(){
 		var cell = $(".cell")
