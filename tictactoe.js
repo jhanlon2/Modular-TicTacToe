@@ -70,7 +70,14 @@ var tictactoe = (function(){
 					else{
 						var two_d_board = _this.convert2dBoard(res.data.board)
 						_this.values = two_d_board
-						}
+						}	
+				var i = 1
+				var saved_board = res.data.board
+				console.log(saved_board)
+				for (var moves = 0; moves < saved_board.length; moves++){
+					$("#"+i).text(saved_board[moves])
+					i++
+					}
 				})
 			}
 		this.getFromApi()
@@ -125,9 +132,11 @@ var tictactoe = (function(){
 
 		this.reset = function(){
 			//Reset the turn count
-			//Clear the board
 			this.turn_count = 0
-			this.saveToApi()
+			//Clear the board
+			var obj = {tic_tac_toe_game: {data: {board: [""]}}}
+			$.post("http://ce-sample-api.herokuapp.com/tic_tac_toe_games/3.json",obj,function(res){
+				})
 			}
 
 		this.place = function(x_coord,y_coord){
@@ -167,6 +176,7 @@ var tictactoe = (function(){
 			]
 
 		this.getWinner = function(){
+			var current_player = this.player_turn
 			for(var i = 0; i < this.WINNING_COORDS.length; i++){
 				var coord_list = this.WINNING_COORDS[i]
 				var winner = this.checkSame(coord_list)
